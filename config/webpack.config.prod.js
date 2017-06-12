@@ -133,6 +133,7 @@ module.exports = {
         exclude: [
           /\.html$/,
           /\.(js|jsx)$/,
+          /\.scss$/,
           /\.css$/,
           /\.json$/,
           /\.bmp$/,
@@ -161,6 +162,32 @@ module.exports = {
         include: paths.appSrc,
         loader: require.resolve('babel-loader'),
         
+      },
+      {
+        test: /\.scss$/,
+        loader: ExtractTextPlugin.extract(
+          Object.assign(
+            {
+              fallback: require.resolve('style-loader'),
+              use: [
+                {
+                  loader: require.resolve('css-loader'),
+                  options: {
+                    modules: true,
+                    localIdentName: '[local]___[hash:base64:5]',
+                    importLoaders: 1,
+                    minimize: true,
+                    sourceMap: true,
+                  },
+                },
+                {
+                  loader: require.resolve('sass-loader'),
+                }
+              ],
+            },
+            extractTextPluginOptions
+          )
+        ),
       },
       // The notation here is somewhat confusing.
       // "postcss" loader applies autoprefixer to our CSS.
